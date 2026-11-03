@@ -1,0 +1,37 @@
+classDiagram
+    class Employee {
+        -String id
+        -ContactInfo contact
+        -Payroll payroll
+        -LeaveBalance leave
+        +payroll() Payroll
+        +leave() LeaveBalance
+        +contact() ContactInfo
+    }
+    class ContactInfo {
+        -String name
+        -String email
+        +emailSignature() String
+    }
+    class Payroll {
+        -double baseSalary
+        -double taxRate
+        +netPay() double
+    }
+    class LeaveBalance {
+        -int taken
+        -int quota
+        +canTake(days) boolean
+        +apply(days) void
+    }
+
+    Employee *-- ContactInfo
+    Employee *-- Payroll
+    Employee *-- LeaveBalance
+
+    PayrollRun --> Payroll : netPay()
+    LeavePortal --> LeaveBalance : apply()
+    MailService --> ContactInfo : emailSignature()
+
+    note for Payroll "Changes only when\nFinance changes tax rules"
+    note for LeaveBalance "Changes only when\nHR changes leave policy"

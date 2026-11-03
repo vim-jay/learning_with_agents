@@ -1,0 +1,13 @@
+classDiagram
+    class Employee {
+        -int leavesTaken
+        -int leaveQuota
+        +getLeavesTaken() int
+        +setLeavesTaken(int) void
+        +getLeaveQuota() int
+    }
+    class LeaveValidator {
+        +canTakeLeave(Employee, days) boolean
+    }
+    LeaveValidator --> Employee : reads getters, calls setter
+    note for LeaveValidator "Rule is here, data is there\n= low cohesion + high coupling"

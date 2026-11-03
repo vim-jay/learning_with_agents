@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "learner": {
+    "preferred_language": "java",
+    "started_on": "2026-10-26"
+  },
+  "xp": {
+    "total": 32,
+    "level": "Novice"
+  },
+  "topics": {
+    "object-oriented-basics": {
+      "status": "learning",
+      "mastery": 12,
+      "xp": 32,
+      "quizzes": [
+        {
+          "id": "quiz-01",
+          "score_pct": 31,
+          "xp": 32,
+          "date": "2026-10-27"
+        }
+      ],
+      "exercises": []
+    },
+    "coupling-and-cohesion": {
+      "status": "learning",
+      "mastery": 0,
+      "xp": 0,
+      "quizzes": [],
+      "exercises": []
+    }
+  },
+  "pitfalls": [
+    {
+      "id": "encapsulation-as-getters-setters",
+      "topic": "object-oriented-basics",
+      "description": "Treats private fields + getters/setters as encapsulation; exposes setters instead of guarded domain operations (deposit/debit).",
+      "times_hit": 2,
+      "times_avoided_in_a_row": 0,
+      "last_seen": "2026-10-27",
+      "status": "active"
+    },
+    {
+      "id": "logic-outside-owning-object",
+      "topic": "object-oriented-basics",
+      "description": "Leaves logic that uses an object's data outside it (feature envy / ask-don't-tell / train-wreck).",
+      "times_hit": 1,
+      "times_avoided_in_a_row": 0,
+      "last_seen": "2026-10-27",
+      "status": "active"
+    },
+    {
+      "id": "inheritance-for-reuse-not-polymorphism",
+      "topic": "object-oriented-basics",
+      "description": "Reaches for 'inheritance for code reuse' instead of polymorphism (runtime dispatch) to replace type switches.",
+      "times_hit": 1,
+      "times_avoided_in_a_row": 0,
+      "last_seen": "2026-10-27",
+      "status": "active"
+    }
+  ],
+  "history": [
+    {
+      "date": "2026-10-27",
+      "activity": "quiz",
+      "topic": "object-oriented-basics",
+      "id": "quiz-01",
+      "xp": 32,
+      "note": "31% FAIL; Q3/Q4/Q6 blank"
+    }
+  ]
+}
