@@ -25,6 +25,24 @@ Search-result summaries only. Feature status was then checked on the local JDK (
 - 2026-11-03 | [Reasons to move to Java 25 (Microsoft)](https://learn.microsoft.com/en-us/java/openjdk/reasons-to-move-to-java-25) | Virtual thread pinning fix, scoped values
 - 2026-11-03 | [Project Loom in IntelliJ IDEA (JetBrains)](https://blog.jetbrains.com/idea/2026/08/project-loom-in-intellij-idea-virtual-threads-scoped-values-and-structured-concurrency/) | Loom feature status
 
+## JVM internals: `jvm-memory-areas`
+
+Pages fetched and read for the relevant sections, not search summaries. Claims were then tested
+on the local JDK where possible.
+
+- 2026-11-03 | [JVMS SE 25, Chapter 2: run-time data areas and frames](https://docs.oracle.com/javase/specs/jvms/se25/html/jvms-2.html) | §2.5 areas and their errors, method area location not mandated, §2.6 frame contents and compile-time sizing
+- 2026-11-03 | [The java command, JDK 25](https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html) | Flag descriptions and defaults, `-Xss` per platform, scope of `-XX:+HeapDumpOnOutOfMemoryError`, `MetaspaceSize` meaning, GC overhead limit
+- 2026-11-03 | [Troubleshoot memory leaks, JDK 25](https://docs.oracle.com/en/java/javase/25/troubleshoot/troubleshooting-memory-leaks.html) | `OutOfMemoryError` detail messages, native allocation failure and the fatal error log
+- 2026-11-03 | [Diagnostic tools, JDK 25](https://docs.oracle.com/en/java/javase/25/troubleshoot/diagnostic-tools.html) | Native Memory Tracking: reserved vs committed, overhead, non-JVM code not tracked, baseline and diff
+- 2026-11-03 | [Troubleshoot system crashes, JDK 25](https://docs.oracle.com/en/java/javase/25/troubleshoot/troubleshoot-system-crashes.html) | Java and native frames share one stack in HotSpot, shadow pages
+- 2026-11-03 | [JEP 122: Remove the permanent generation](https://openjdk.org/jeps/122) | Release 8; metadata to native memory, interned strings and statics to the heap
+- 2026-11-03 | [JEP 197: Segmented code cache](https://openjdk.org/jeps/197) | Release 9; the three code heaps
+- 2026-11-03 | [JEP 387: Elastic metaspace](https://openjdk.org/jeps/387) | Release 16; per-class-loader arenas, returning memory to the OS
+- 2026-11-03 | [JEP 444: Virtual threads](https://openjdk.org/jeps/444) | Release 21; stack chunk objects on the heap, maximum depth
+- 2026-11-03 | [JDK-8146115: container detection and resource configuration](https://bugs.openjdk.org/browse/JDK-8146115) | Fix version 10; JVM uses the cgroup memory limit, `UseContainerSupport` on by default
+
 ## Verified locally
 
 - 2026-11-03 | OpenJDK 25.0.2 (Homebrew) | Ran the feature and flag checks listed in `mentor/roadmap.md`
+- 2026-11-03 | OpenJDK 25.0.2 (Homebrew) and its `lib/src.zip` | `jvm-memory-areas`: each failure mode, dump and exit flag behaviour, NMT, stack, code cache and direct buffer experiments; read `java/nio/Bits.java`, `java/nio/DirectByteBuffer.java`, `sun/nio/ch/IOUtil.java`, `sun/nio/ch/Util.java`
+- 2026-11-03 | Temurin 21.0.11 in Docker (`apache/kafka:latest`, already on this machine; no JDK 25 Linux image was pulled) | Container limit sets default heap, cgroup kill gives exit 137 with `OOMKilled=true`. This is JDK 21, not 25

@@ -14,7 +14,49 @@ Maintained by `java-dev-mentor`. Status meanings are defined in the agent file (
 
 ## Pending understanding check
 
-None.
+**Topic:** `jvm-memory-areas` · **Asked:** 2026-11-03 · **Attempt:** 1 of 2
+
+1. **Explain back.** In your own words, why can a Java process use far more memory than `-Xmx`?
+   Then use this code. Where does each of these live: `m`, the `HashMap` object, `k`, `n`, `v`,
+   the `int[]`? Which are gone once `put` returns? For anything that survives, what has to
+   happen before its memory can be freed?
+
+   ```java
+   import java.util.*;
+
+   class Cache {
+       static Map<String, int[]> m = new HashMap<>();
+
+       void put(String k) {
+           int n = 10;
+           int[] v = new int[n];
+           m.put(k, v);
+       }
+   }
+   ```
+
+2. **Predict, then explain.** Run this with `-Xmx1g -XX:MaxDirectMemorySize=64m`. Does it finish
+   or fail? Then add `-XX:+DisableExplicitGC`. Does it finish or fail now? Explain the mechanism
+   in both runs. For any run that finishes, is it healthy? What would the GC log show?
+
+   ```java
+   import java.nio.ByteBuffer;
+
+   public class Churn {
+       public static void main(String[] args) {
+           for (int i = 1; i <= 2_000; i++) {
+               ByteBuffer b = ByteBuffer.allocateDirect(1 << 20); // 1 MiB; reference dropped each loop
+               b.put(0, (byte) 1);
+           }
+           System.out.println("finished");
+       }
+   }
+   ```
+
+3. **Diagnose.** A thread-per-request service runs with `-Xmx4g` and throws
+   `OutOfMemoryError: unable to create native thread`. The heap is 30% used. A teammate doubles
+   `-Xmx` to 8g. Will that fix it? Could it make things worse, and on what kind of machine? What
+   do you check first, and why?
 
 ## Topics
 
@@ -55,7 +97,7 @@ None.
 | 33 | 5 | `virtual-threads` | P0 | not-started | - | - | - | - | - |
 | 34 | 5 | `scoped-values` | P1 | not-started | - | - | - | - | - |
 | 35 | 5 | `structured-concurrency` | P1 | not-started | - | - | - | - | - |
-| 36 | 6 | `jvm-memory-areas` | P0 | not-started | - | - | - | - | - |
+| 36 | 6 | `jvm-memory-areas` | P0 | learning | - | - | - | - | 2026-11-03 |
 | 37 | 6 | `class-loading` | P0 | not-started | - | - | - | - | - |
 | 38 | 6 | `gc-fundamentals` | P0 | not-started | - | - | - | - | - |
 | 39 | 6 | `gc-collectors` | P0 | not-started | - | - | - | - | - |
@@ -81,3 +123,4 @@ None.
 Newest at the bottom.
 
 - 2026-11-03: Workspace set up. Phase 0 topics marked `covered-unverified` from `memory/java-8-learning-memory-prompt.md`.
+- 2026-11-03: Learner chose to start at Phase 6. Taught `jvm-memory-areas`, wrote `notes/jvm-memory-areas.md`, understanding check pending.
