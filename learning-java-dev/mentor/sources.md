@@ -41,8 +41,21 @@ on the local JDK where possible.
 - 2026-11-03 | [JEP 444: Virtual threads](https://openjdk.org/jeps/444) | Release 21; stack chunk objects on the heap, maximum depth
 - 2026-11-03 | [JDK-8146115: container detection and resource configuration](https://bugs.openjdk.org/browse/JDK-8146115) | Fix version 10; JVM uses the cgroup memory limit, `UseContainerSupport` on by default
 
+## JVM internals: follow-up notes (`jvm-memory-areas`, `jit-compilation` seed)
+
+Pages fetched and read for the relevant sections, not search summaries.
+
+- 2026-11-06 | [JDK-8290025: Remove the Sweeper](https://bugs.openjdk.org/browse/JDK-8290025) | Fix version 20; sweeper thread and zombie state removed, GC unloads compiled code
+- 2026-11-06 | [The jstat command, JDK 25](https://docs.oracle.com/en/java/javase/25/docs/specs/man/jstat.html) | `-gcutil` column definitions; percentages are of current capacity; `CGC`/`CGCT` are not defined there
+
 ## Verified locally
 
 - 2026-11-03 | OpenJDK 25.0.2 (Homebrew) | Ran the feature and flag checks listed in `mentor/roadmap.md`
 - 2026-11-03 | OpenJDK 25.0.2 (Homebrew) and its `lib/src.zip` | `jvm-memory-areas`: each failure mode, dump and exit flag behaviour, NMT, stack, code cache and direct buffer experiments; read `java/nio/Bits.java`, `java/nio/DirectByteBuffer.java`, `sun/nio/ch/IOUtil.java`, `sun/nio/ch/Util.java`
 - 2026-11-03 | Temurin 21.0.11 in Docker (`apache/kafka:latest`, already on this machine; no JDK 25 Linux image was pulled) | Container limit sets default heap, cgroup kill gives exit 137 with `OOMKilled=true`. This is JDK 21, not 25
+- 2026-11-06 | OpenJDK 25.0.2 (Homebrew) and its `lib/src.zip` | Follow-up notes: HotSpot identity, JVM start and stop, code cache and deoptimization (`-XX:+PrintCompilation`, `-Xlog:deoptimization`), direct buffer use, `jps`/`jcmd`/`jstat`, `jlink` runtimes; read `java/nio/Buffer.java`, `java/nio/DirectByteBuffer.java`, `sun/nio/ch/IOUtil.java`
+- 2026-11-06 | OpenJDK 25.0.2 (Homebrew) and its `lib/src.zip` | `object-contracts`: ran every demo and both check programs; read the contracts and code in `java/lang/Object.java`, `Comparable.java`, `Record.java`, `java/util/HashMap.java`, `HashSet.java`, `TreeMap.java`, `ArrayList.java`, `ImmutableCollections.java`, `java/math/BigDecimal.java`, `java/net/URL.java`
+
+## Tooling: `gcloud-cli` install on macOS
+
+- 2026-11-04 | [Homebrew homebrew-core issue #277086](https://github.com/Homebrew/homebrew-core/issues/277086) | python@3.14 `pyexpat` fails on macOS 26.0-26.2 because Apple changed the system libexpat in 26.3; maintainer's fix is to upgrade macOS

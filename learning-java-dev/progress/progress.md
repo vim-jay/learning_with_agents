@@ -14,7 +14,74 @@ Maintained by `java-dev-mentor`. Status meanings are defined in the agent file (
 
 ## Pending understanding check
 
-**Topic:** `jvm-memory-areas` · **Asked:** 2026-11-03 · **Attempt:** 1 of 2
+**Topic:** `object-contracts` · **Asked:** 2026-11-06 · **Attempt:** 1 of 2
+
+1. **Explain back.** In your own words, what does `HashSet.contains` do with `hashCode()` and
+   `equals()`, step by step? Why is "equal objects must have equal hash codes" a hard rule,
+   while "unequal objects may share a hash code" is allowed?
+
+2. **Predict, then explain.** What do the four lines print? Explain each one. Then change `Tag`
+   so it is safe to use as a set element, and say why your change works.
+
+   ```java
+   import java.util.*;
+
+   record Tag(String name, List<String> aliases) {}
+
+   public class Q1 {
+       public static void main(String[] args) {
+           List<String> aliases = new ArrayList<>(List.of("a"));
+           Tag t = new Tag("x", aliases);
+           Set<Tag> set = new HashSet<>();
+           set.add(t);
+           aliases.add("b");
+           System.out.println(set.contains(t));
+           System.out.println(set.contains(new Tag("x", List.of("a"))));
+           System.out.println(set.contains(new Tag("x", List.of("a", "b"))));
+           System.out.println(set.size());
+       }
+   }
+   ```
+
+3. **Predict, then fix.** What do the four lines print, and why? Then fix the design so `equals`
+   is symmetric, and say what your fix costs.
+
+   ```java
+   import java.util.*;
+
+   class Point {
+       final int x, y;
+       Point(int x, int y) { this.x = x; this.y = y; }
+       @Override public boolean equals(Object o) { return o instanceof Point p && x == p.x && y == p.y; }
+       @Override public int hashCode() { return Objects.hash(x, y); }
+   }
+
+   class ColorPoint extends Point {
+       final String color;
+       ColorPoint(int x, int y, String color) { super(x, y); this.color = color; }
+       @Override public boolean equals(Object o) {
+           return o instanceof ColorPoint cp && super.equals(cp) && color.equals(cp.color);
+       }
+   }
+
+   public class Q2 {
+       public static void main(String[] args) {
+           Point p = new Point(1, 2);
+           Point cp = new ColorPoint(1, 2, "red");
+           System.out.println(p.equals(cp));
+           System.out.println(cp.equals(p));
+           System.out.println(new ArrayList<>(List.of(cp)).contains(p));
+           System.out.println(new ArrayList<>(List.of(p)).contains(cp));
+       }
+   }
+   ```
+
+## Parked understanding checks
+
+Unanswered checks set aside when the learner switched phases. When the learner asks to resume
+one, it becomes the pending check again with its attempt count unchanged.
+
+### `jvm-memory-areas` · Asked 2026-11-03 · Parked 2026-11-06 · Attempt 1 of 2
 
 1. **Explain back.** In your own words, why can a Java process use far more memory than `-Xmx`?
    Then use this code. Where does each of these live: `m`, the `HashMap` object, `k`, `n`, `v`,
@@ -65,7 +132,7 @@ Maintained by `java-dev-mentor`. Status meanings are defined in the agent file (
 | 1 | 0 | `baseline-functional` | P0 | covered-unverified | - | - | - | - | - |
 | 2 | 0 | `baseline-oop-dispatch` | P0 | covered-unverified | - | - | - | - | - |
 | 3 | 0 | `baseline-modern-types` | P0 | covered-unverified | - | - | - | - | - |
-| 4 | 1 | `object-contracts` | P0 | not-started | - | - | - | - | - |
+| 4 | 1 | `object-contracts` | P0 | learning | - | - | - | - | 2026-11-06 |
 | 5 | 1 | `strings-and-immutability` | P0 | not-started | - | - | - | - | - |
 | 6 | 1 | `generics-deep-dive` | P0 | not-started | - | - | - | - | - |
 | 7 | 1 | `exceptions` | P0 | not-started | - | - | - | - | - |
@@ -124,3 +191,5 @@ Newest at the bottom.
 
 - 2026-11-03: Workspace set up. Phase 0 topics marked `covered-unverified` from `memory/java-8-learning-memory-prompt.md`.
 - 2026-11-03: Learner chose to start at Phase 6. Taught `jvm-memory-areas`, wrote `notes/jvm-memory-areas.md`, understanding check pending.
+- 2026-11-06: Notes only: added a step-by-step learning path to `notes/jvm-memory-areas.md` from follow-up doubts, and seeded `notes/jit-compilation.md` (topic still `not-started`).
+- 2026-11-06: Learner switched to Phase 1. `jvm-memory-areas` check parked unanswered (attempt 1 of 2). Taught `object-contracts`, wrote `notes/object-contracts.md`, understanding check pending.
